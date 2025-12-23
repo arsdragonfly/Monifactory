@@ -1,0 +1,8 @@
+{
+    "type": "emi:info",
+    "stacks": [
+        "item:gtceu:black_steel_block",
+        "item:minecraft:ender_eye"
+    ],
+    "text": "emi.info.custom_end_portal"
+}

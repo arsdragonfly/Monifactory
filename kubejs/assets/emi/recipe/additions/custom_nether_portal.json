@@ -1,0 +1,8 @@
+{
+    "type": "emi:info",
+    "stacks": [
+        "item:gtceu:steel_block",
+        "item:minecraft:flint_and_steel"
+    ],
+    "text": "emi.info.custom_nether_portal"
+}
