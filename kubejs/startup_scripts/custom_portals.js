@@ -1,9 +1,9 @@
 /**
  * Custom Dimension Portals using Custom Portal API
- * 
+ *
  * Registers custom portals for Nether (Steel Block frame) and End (Black Steel Block frame).
  * Includes Create mod train integration via PortalTrackProvider.
- * 
+ *
  * Requires: cpapireforged mod with ITeleporter fix for proper End teleportation.
  */
 
