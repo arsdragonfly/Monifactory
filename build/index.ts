@@ -61,6 +61,28 @@ const symlinkSync = (ourDir: fs.PathLike, newDir: fs.PathLike) => {
     fs.symlinkSync(ourDir, newDir)
 }
 
+/**
+ * Filter function for fs.cpSync to skip symlinks (which cause issues on Windows)
+ * and node_modules/.bin directories
+ */
+const copyFilter = (src: string): boolean => {
+    // Skip node_modules/.bin directory entirely (contains symlinks)
+    if (src.includes("node_modules/.bin") || src.includes("node_modules\\.bin")) {
+        return false
+    }
+    // Skip any symlinks
+    try {
+        const stat = fs.lstatSync(src)
+        if (stat.isSymbolicLink()) {
+            return false
+        }
+    } catch {
+        // If we can't stat the file, skip it
+        return false
+    }
+    return true
+}
+
 const cpMods = (targetDir: string, filter?: (file: string) => boolean) => {
     // Cache might contain more files than the manifest!
     // Make sure to copy only the necessary ones
@@ -135,7 +157,7 @@ export const BuildClientTarget = getZipModPackTarget("client", PackSwitchTarget 
         executes: () => {
             fs.mkdirSync("dist/client/overrides", { recursive: true })
             for (const folders of includeList) {
-                fs.cpSync(folders, `dist/client/overrides/${folders}`, { recursive: true })
+                fs.cpSync(folders, `dist/client/overrides/${folders}`, { recursive: true, filter: copyFilter })
             }
         }
     })
@@ -157,7 +179,7 @@ export const BuildServerTarget = getZipModPackTarget("server", PackSwitchTarget 
         executes: () => {
             fs.mkdirSync("dist/server", { recursive: true })
             for (const folders of includeList) {
-                fs.cpSync(folders, `dist/server/${folders}`, { recursive: true })
+                fs.cpSync(folders, `dist/server/${folders}`, { recursive: true, filter: copyFilter })
             }
 
             fs.mkdirSync("dist/server/mods")
